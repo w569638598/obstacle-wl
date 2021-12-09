@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #000;
+        stroke-width: 2px;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="图层_1_拷贝" data-name="图层 1 拷贝" class="cls-1" d="M85.6,44.81V87.757H14.673V44.81S16.482,17.854,50,13C82.023,16.458,85.6,44.81,85.6,44.81Z"/>
+</svg>
