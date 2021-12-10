@@ -20,7 +20,7 @@ import removeBtn from "../common/removeBtn";
 
 import { ToolTypeEnum } from "../common/enums";
 
-function changeTag(tagType, value = "") {
+function changeTag(tagType, value = "", cell) {
   const node = document.createElement(tagType);
   if (tagType == "span") {
     node.style.cssText = spanCss;
@@ -32,6 +32,10 @@ function changeTag(tagType, value = "") {
     node.style.cssText = spanCss;
     node.focus();
   }
+  cell.setProp("data", {
+    typeImgNo: cell.store.data.data.typeImgNo,
+    textContent: value
+  })
   return node;
 }
 export default {
@@ -159,7 +163,6 @@ export default {
           });
         },
         getHTMLComponent(node) {
-          debugger
           const data = node.getData();
           if (data.flag) {
             return document.createElement("div");
@@ -226,7 +229,8 @@ export default {
           const input = html.querySelector("textarea");
           html.querySelector("textarea").outerHTML = changeTag(
             "span",
-            input.value
+            input.value,
+            cell
           ).outerHTML;
         }
         return html;
@@ -250,7 +254,8 @@ export default {
           const input = html.querySelector("textarea");
           html.querySelector("textarea").outerHTML = changeTag(
             "span",
-            input.value
+            input.value,
+            cell
           ).outerHTML;
         }
         return html;
@@ -296,7 +301,8 @@ export default {
           const span = html.querySelector("span");
           html.querySelector("span").outerHTML = changeTag(
             "textarea",
-            span.innerText
+            span.innerText,
+            cell
           ).outerHTML;
         }
         return html;
@@ -356,8 +362,7 @@ export default {
   },
   methods: {
     exportData() {
-      console.log(this.graph, this.graph.getNodes())
-      localStorage.setItem("cell", JSON.stringify(this.graph.getNodes()));
+      localStorage.setItem("cell", JSON.stringify(this.graph.toJSON()));
     },
   },
 };
