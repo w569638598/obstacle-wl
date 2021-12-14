@@ -1,7 +1,7 @@
 <template>
   <div class="node-bar-container">
     <ul class="nodes-bar">
-      <li v-for="(node, index) in nodes" :key="index" :title="node.label" :class="[index > 10 ? 'fullWidth': '']">
+      <li v-for="(node, index) in nodes" :key="index" :title="node.label" :class="[index > 11 ? 'fullWidth': '']">
         <img
           v-if="node.shape == 'image'"
           :src="node.url"
@@ -94,17 +94,22 @@ ul{
     width: 90%;
     margin: auto;
     padding: 10px 0;
+    clear: both;
+
+  }
+  li:nth-child(13){
+    // border-top: solid 1px #ccc;
+    // clear: both;
+    // padding-top: 20px;
+    // margin-top: 20px
+  }
+  li:nth-child(3),li:nth-child(4),li:nth-child(11),li:nth-child(12){
+    border-bottom: solid 1px #ccc;
   }
   li:nth-child(12){
-    border-top: solid 1px #ccc;
-    clear: both;
-    padding-top: 20px;
-    margin-top: 20px
-  }
-  li:nth-child(11){
     margin-bottom: 20px;
   }
-  li:not(.fullWidth){
+  li{
     width: 50%;
     float: left;
     box-sizing: border-box;
