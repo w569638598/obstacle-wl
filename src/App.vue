@@ -1,16 +1,17 @@
 <template>
   <div id="app" ref="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view></router-view>
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from '../packages/x6'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    // HelloWorld
   },
   mounted(){
     this.$refs.app.style.cssText = "height: " + window.innerHeight + "px"
