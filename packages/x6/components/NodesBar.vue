@@ -97,12 +97,6 @@ ul{
     clear: both;
 
   }
-  li:nth-child(13){
-    // border-top: solid 1px #ccc;
-    // clear: both;
-    // padding-top: 20px;
-    // margin-top: 20px
-  }
   li:nth-child(3),li:nth-child(4),li:nth-child(11),li:nth-child(12){
     border-bottom: solid 1px #ccc;
   }
