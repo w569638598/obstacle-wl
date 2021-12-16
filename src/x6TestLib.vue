@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import {x6} from "../lib/x6.common"
+import {x6} from "../lib/obstacle-wl.common.js"
   export default {
     name: "x6TestLib",
       data() {

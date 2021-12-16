@@ -5,7 +5,7 @@
       <Toolbar :graph="graph" />
     </div>
     <!-- 画布 -->
-    <div id="container"></div>
+    <div id="container" :style="{height: canvasHeight}"></div>
     <button class="exportData" @click="exportData">导出</button>
   </div>
 </template>
@@ -42,15 +42,21 @@ function changeTag(tagType, value = "", cell) {
 export default {
   name: "HelloWorld",
   props: {
-    msg: String,
+    height: String,
   },
   data() {
     return {
       graph: null,
       currentCell: null,
+      history: null
     };
   },
-  watch: {},
+  computed: {
+    canvasHeight(){
+      if(this.height) return this.height;
+      return window.innerHeight + "px"
+    }
+  },
   mounted() {
     this.graph = initGraph();
     this.graph.on("edge:click", ({ cell, e }) => {
@@ -236,6 +242,26 @@ export default {
       changePortsVisible(node, false);
       if (tooltipDom) tooltipDom.style.display = "none";
     });
+    this.history = this.graph.history;
+    this.history.on('change', () => {
+      // this.setState({
+      //   canRedo: this.history.canRedo(),
+      //   canUndo: this.history.canUndo(),
+      // })
+    })
+  
+    document.addEventListener('keydown', e => {
+      if(e.key == 'Delete'){
+        if(this.graph.findView(this.currentCell)){
+          this.currentCell.remove()
+        }
+        console.log('delete event')
+      }
+      if(window.event.ctrlKey && e.key === 'z'){
+          this.history.undo()
+          console.log('ctrl + z')
+        }
+    })
   },
   components: {
     Toolbar,
@@ -274,5 +300,6 @@ const changePortsVisible = (node, visible) => {
 #container {
   flex: 1;
   height: 100% !important;
+  min-height: 10px;
 }
 </style>

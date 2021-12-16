@@ -27,6 +27,9 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+#app > div{
+  height: 100%;
+}
 body{
   margin: 0;
 }
