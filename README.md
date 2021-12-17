@@ -6,17 +6,16 @@
 
 ![](call.jpg)
 
-> -
-> `
+> - 
 
-- 
+
+
+----
+> 文档都没有你们下载下来干什么？
 
 > 不会的就 [百度](https://www.baidu.com)
 ```javascript
 
 ```
 ---- 
-
-
-----
 `javascript`
