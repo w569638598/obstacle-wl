@@ -3,7 +3,6 @@
     <ul class="nodes-bar">
       <li v-for="(node, index) in nodes" :key="index" :title="node.label" :class="[index > 11 ? 'fullWidth': '']">
         <img
-          v-if="node.shape == 'image'"
           :src="node.url"
           alt=""
           @mousedown="startDrag(node, $event)"
@@ -15,7 +14,7 @@
 </template>
 <script>
 import { nodes } from "../common/nodesBar";
-import { getImageNode } from "../common/transform";
+import { createImageNode } from "../common/transform";
 import { Addon } from "@antv/x6";
 export default {
   props: ["graph"],
@@ -51,7 +50,7 @@ export default {
         width,
         height
       } = currentTarget;
-      let json = getImageNode({
+      let json = createImageNode({
         shape,
         tooltip: label,
         size: { width: 100, height: 50 },

@@ -5,7 +5,7 @@
       <Toolbar :graph="graph" />
     </div>
     <!-- 画布 -->
-    <div id="container" :style="{height: canvasHeight}"></div>
+    <div id="container" :style="{ height: canvasHeight }"></div>
     <button class="exportData" @click="exportData">导出</button>
   </div>
 </template>
@@ -16,7 +16,7 @@ import spanCss from "./common/style";
 import { nodes } from "./common/nodesBar";
 import createDom from "./common/createDom";
 import { initGraph } from "./common/graph";
-
+import { createImageNode } from "./common/transform";
 /**
  * @param {HTMLElement} tagType 需要替换的目标元素标签 --span
  * @param {String} value 设置的值
@@ -32,7 +32,7 @@ function changeTag(tagType, value = "", cell) {
     node.innerHTML = value;
     node.style.cssText = spanCss;
   }
-  node.setAttribute("id", "currentTextNode")
+  node.setAttribute("id", "currentTextNode");
   cell.setProp("data", {
     typeImgNo: cell.store.data.data.typeImgNo,
     textContent: value,
@@ -48,14 +48,14 @@ export default {
     return {
       graph: null,
       currentCell: null,
-      history: null
+      history: null,
     };
   },
   computed: {
-    canvasHeight(){
-      if(this.height) return this.height;
-      return window.innerHeight + "px"
-    }
+    canvasHeight() {
+      if (this.height) return this.height;
+      return window.innerHeight + "px";
+    },
   },
   mounted() {
     this.graph = initGraph();
@@ -66,7 +66,7 @@ export default {
       }
 
       let removeBtnCfg;
-      if (cell.isEdge()) {
+      if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "red", strokeWidth: 3 });
         removeBtnCfg = { distance: "30%" };
       }
@@ -98,7 +98,7 @@ export default {
     }
 
     this.graph.on("cell:unselected", ({ cell, node, e }) => {
-      if (cell.isEdge()) {
+      if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "#7c68fc", strokeWidth: 2 });
       } else {
         const cellView = this.graph.findView(cell);
@@ -130,8 +130,8 @@ export default {
 
     this.graph.on("blank:click", () => {
       if (!this.currentCell) return;
-      const cell = this.currentCell;
-      if (cell.isEdge()) {
+      const cell = this.currentCell.id ? this.currentCell : this.currentCell.cell;
+      if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "#7c68fc", strokeWidth: 2 });
       }
       cell.removeTools();
@@ -149,7 +149,7 @@ export default {
         }
         return html;
       });
-      this.currentCell = null
+      this.currentCell = null;
     });
 
     this.graph.on("edge:connected", (args) => {
@@ -166,7 +166,7 @@ export default {
           strokeDasharray: "",
           // targetMarker: 'classic'
           targetMarker: {
-            name: "path"
+            name: "path",
           },
         },
       });
@@ -178,27 +178,33 @@ export default {
         },
       });
     });
-    this.graph.on("node:mousedown", ({ cell, e }) => {
-      if (this.currentCell) {
-        if(this.currentCell.id == cell.id)return;
-        this.currentCell.removeTools();
-        const html =
-          this.currentCell.html instanceof Function
-            ? this.currentCell.html()
-            : this.currentCell.html;
-        this.currentCell.setProp("html", () => {
-          const childrenTag = html.children[1];
-          if (childrenTag.nodeName !== "PRE") {
-            const input = html.querySelector("textarea");
-            html.querySelector("textarea").outerHTML = changeTag(
-              "pre",
-              input.value,
-              this.currentCell
-            ).outerHTML;
-          }
-          return html;
-        });
-      }
+    this.graph.on("node:click", (cell) => {
+      this.currentCell = cell;
+    });
+    this.graph.on("node:dblclick", ({ cell, e }) => {
+      // if (this.currentCell) {
+      //   const curCell = this.currentCell.id
+      //     ? this.currentCell
+      //     : this.currentCell.cell;
+      //   if (curCell.id == cell.id) return;
+
+      //   curCell.removeTools();
+
+      //   const html =
+      //     curCell.html instanceof Function ? curCell.html() : curCell.html;
+      //   curCell.setProp("html", () => {
+      //     const childrenTag = html.children[1];
+      //     if (childrenTag.nodeName !== "PRE") {
+      //       const input = html.querySelector("textarea");
+      //       html.querySelector("textarea").outerHTML = changeTag(
+      //         "pre",
+      //         input.value,
+      //         curCell
+      //       ).outerHTML;
+      //     }
+      //     return html;
+      //   });
+      // }
 
       Event.stopPropagation;
       const html = cell.html instanceof Function ? cell.html() : cell.html;
@@ -225,7 +231,7 @@ export default {
         args: removeBtnCfg, // 工具对应的参数
       });
       this.currentCell = cell;
-      document.getElementById('currentTextNode').focus()
+      document.getElementById("currentTextNode").focus();
     });
 
     this.graph.on("node:mouseenter", ({ node }) => {
@@ -243,25 +249,51 @@ export default {
       if (tooltipDom) tooltipDom.style.display = "none";
     });
     this.history = this.graph.history;
-    this.history.on('change', () => {
+    this.history.on("change", () => {
       // this.setState({
       //   canRedo: this.history.canRedo(),
       //   canUndo: this.history.canUndo(),
       // })
-    })
-  
-    document.addEventListener('keydown', e => {
-      if(e.key == 'Delete'){
-        if(this.graph.findView(this.currentCell)){
-          this.currentCell.remove()
+    });
+    let copyState = false;
+    document.addEventListener("keydown", (e) => {
+      if (e.key == "Delete") {
+        if (this.graph.findView(this.currentCell)) {
+          this.currentCell.remove();
         }
-        console.log('delete event')
       }
-      if(window.event.ctrlKey && e.key === 'z'){
-          this.history.undo()
-          console.log('ctrl + z')
+      if (window.event.ctrlKey && e.key === "z") {
+        this.history.undo();
+      }
+      console.log(window.event.ctrlKey && window.event.shiftKey && e.key === "z", window.event.ctrlKey,window.event.shiftKey, e.key === "z")
+      if (window.event.ctrlKey && window.event.shiftKey && e.key === "z") {
+        debugger;
+        console.log("000000000000000");
+        this.history.redo();
+      }
+      if (window.event.ctrlKey && e.key === "c") {
+        copyState = true;
+      }
+      if (window.event.ctrlKey && e.key === "v" && copyState) {
+        if (!this.currentCell || !this.currentCell.node) return;
+        console.log(this.currentCell.node)
+        const cell = this.currentCell.node.store.data.data;
+        let createCell;
+        if(!cell.typeImgNo)return;
+        for (let i = 0; i < nodes.length; i++) {
+          const item = nodes[i];
+          if(!item.typeImgNo) break;
+          if (cell.typeImgNo === item.typeImgNo) {
+            createCell = item;
+            break;
+          }
         }
-    })
+        createCell.label = cell.textContent;
+        createCell.tooltip = cell.textContent;
+        let json = createImageNode(createCell)
+        this.graph.addNode(json);
+      }
+    });
   },
   components: {
     Toolbar,
@@ -270,6 +302,7 @@ export default {
     exportData() {
       localStorage.setItem("cell", JSON.stringify(this.graph.toJSON()));
     },
+    matchNode() {},
   },
 };
 
