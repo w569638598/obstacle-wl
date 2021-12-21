@@ -48,7 +48,8 @@ export default {
         yAxis,
         typeImgNo,
         width,
-        height
+        height,
+        defaultSpanStyle
       } = currentTarget;
       let json = createImageNode({
         shape,
@@ -61,7 +62,8 @@ export default {
         yAxis,
         typeImgNo,
         width,
-        height
+        height,
+        defaultSpanStyle
       });
 
       const node = this.graph.createNode(json);
@@ -75,6 +77,7 @@ export default {
 .nodes-bar{
   p{
     margin: 0;
+    text-align: center;
   }
 }
 .node-bar-container{
@@ -110,6 +113,8 @@ ul{
   }
   img{
       width: 61%;
+      display: block;
+      margin: auto;
     }
 }
 

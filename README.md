@@ -10,7 +10,7 @@
 ###### 不会的就 [百度](https://www.baidu.com)
 ----
 
-##### 引入方法
+##### 导出方法 export methods
 ```javascript
 
 
@@ -31,6 +31,26 @@ if(typeof window !== "undefined" && window.Vue){
 export { x6 }
 
 export default { install }
+```
+###### 导出数据 export data
+```javascript
+exportData(cb)
+if(cb instanceof Function) cb(this.graph.toJSON(),this.graph);
+      return this.graph.toJSON()
+```
+
+###### 获取实例
+
+```javascript
+getGraph(){
+      return this.graph
+    },
+```
+
+
+###### 渲染数据
+```javascript
+renderData(data: cellJSONObject)
 ```
 ---- 
 `javascript`

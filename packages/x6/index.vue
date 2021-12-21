@@ -6,7 +6,7 @@
     </div>
     <!-- 画布 -->
     <div id="container" :style="{ height: canvasHeight }"></div>
-    <button class="exportData" @click="exportData">导出</button>
+    <!-- <button class="exportData" @click="exportData">导出</button> -->
   </div>
 </template>
 
@@ -26,16 +26,17 @@ import { createImageNode } from "./common/transform";
 function changeTag(tagType, value = "", cell) {
   const node = document.createElement(tagType);
   if (tagType == "pre") {
-    node.style.cssText = spanCss;
+    node.style.cssText = cell.store.data.data.defaultSpanStyle || spanCss;
     node.innerHTML = value;
   } else {
     node.innerHTML = value;
-    node.style.cssText = spanCss;
+    node.style.cssText = cell.store.data.data.defaultSpanStyle || spanCss;
   }
   node.setAttribute("id", "currentTextNode");
   cell.setProp("data", {
     typeImgNo: cell.store.data.data.typeImgNo,
     textContent: value,
+    defaultSpanStyle: cell.store.data.data.defaultSpanStyle,
   });
   return node;
 }
@@ -77,25 +78,10 @@ export default {
       this.currentCell = cell;
     });
 
-    if (localStorage.getItem("cell")) {
-      let cells = JSON.parse(localStorage.getItem("cell")).cells;
-
-      cells.forEach((e) => {
-        if (e.shape === "html") {
-          nodes.forEach((item) => {
-            if (e.data.typeImgNo === item.typeImgNo) {
-              e.html = () =>
-                createDom({ tooltip: e.data.textContent, urlStr: item.urlStr });
-            }
-          });
-        }
-      });
-      this.graph.fromJSON(cells);
-      const nodesss = this.graph.getNodes();
-      nodesss.forEach((e) => {
-        changePortsVisible(e, false);
-      });
-    }
+    // if (localStorage.getItem("cell")) {
+    //   let cells = JSON.parse(localStorage.getItem("cell")).cells;
+    //   this.renderData(cells);
+    // }
 
     this.graph.on("cell:unselected", ({ cell, node, e }) => {
       if (cell.isEdge && cell.isEdge()) {
@@ -130,7 +116,9 @@ export default {
 
     this.graph.on("blank:click", () => {
       if (!this.currentCell) return;
-      const cell = this.currentCell.id ? this.currentCell : this.currentCell.cell;
+      const cell = this.currentCell.id
+        ? this.currentCell
+        : this.currentCell.cell;
       if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "#7c68fc", strokeWidth: 2 });
       }
@@ -149,7 +137,6 @@ export default {
         }
         return html;
       });
-      this.currentCell = null;
     });
 
     this.graph.on("edge:connected", (args) => {
@@ -205,7 +192,6 @@ export default {
       //     return html;
       //   });
       // }
-
       Event.stopPropagation;
       const html = cell.html instanceof Function ? cell.html() : cell.html;
       cell.setProp("html", () => {
@@ -249,49 +235,47 @@ export default {
       if (tooltipDom) tooltipDom.style.display = "none";
     });
     this.history = this.graph.history;
-    this.history.on("change", () => {
-      // this.setState({
-      //   canRedo: this.history.canRedo(),
-      //   canUndo: this.history.canUndo(),
-      // })
-    });
     let copyState = false;
     document.addEventListener("keydown", (e) => {
       if (e.key == "Delete") {
         if (this.graph.findView(this.currentCell)) {
           this.currentCell.remove();
         }
+        return;
       }
       if (window.event.ctrlKey && e.key === "z") {
         this.history.undo();
+        return;
       }
-      console.log(window.event.ctrlKey && window.event.shiftKey && e.key === "z", window.event.ctrlKey,window.event.shiftKey, e.key === "z")
-      if (window.event.ctrlKey && window.event.shiftKey && e.key === "z") {
-        debugger;
-        console.log("000000000000000");
+      if (window.event.ctrlKey && window.event.shiftKey && e.key === "Z") {
+        console.log(this.graph.history, this.currentCell);
         this.history.redo();
+        return;
       }
       if (window.event.ctrlKey && e.key === "c") {
         copyState = true;
+        return;
       }
       if (window.event.ctrlKey && e.key === "v" && copyState) {
         if (!this.currentCell || !this.currentCell.node) return;
-        console.log(this.currentCell.node)
         const cell = this.currentCell.node.store.data.data;
         let createCell;
-        if(!cell.typeImgNo)return;
+        if (!cell.typeImgNo) return;
         for (let i = 0; i < nodes.length; i++) {
           const item = nodes[i];
-          if(!item.typeImgNo) break;
+          if (!item.typeImgNo) break;
           if (cell.typeImgNo === item.typeImgNo) {
-            createCell = item;
+            createCell = JSON.parse(JSON.stringify(item));
             break;
           }
         }
         createCell.label = cell.textContent;
         createCell.tooltip = cell.textContent;
-        let json = createImageNode(createCell)
+        createCell.x = this.currentCell.x + 10;
+        createCell.y = this.currentCell.y + 10;
+        let json = createImageNode(createCell);
         this.graph.addNode(json);
+        return;
       }
     });
   },
@@ -299,8 +283,34 @@ export default {
     Toolbar,
   },
   methods: {
-    exportData() {
-      localStorage.setItem("cell", JSON.stringify(this.graph.toJSON()));
+    renderData(cells) {
+      cells.forEach((e) => {
+        if (e.shape === "html") {
+          nodes.forEach((item) => {
+            if (e.data.typeImgNo === item.typeImgNo) {
+              e.html = () =>
+                createDom({
+                  tooltip: e.data.textContent,
+                  urlStr: item.urlStr,
+                  defaultSpanStyle: item.defaultSpanStyle,
+                });
+            }
+          });
+        }
+      });
+      this.graph.fromJSON(cells);
+      const nodesss = this.graph.getNodes();
+      nodesss.forEach((e) => {
+        changePortsVisible(e, false);
+      });
+    },
+    exportData(cb) {
+      if (cb instanceof Function) cb(this.graph.toJSON(), this.graph);
+      return this.graph.toJSON();
+      // localStorage.setItem("cell", JSON.stringify(this.graph.toJSON()));
+    },
+    getGraph() {
+      return this.graph;
     },
     matchNode() {},
   },
