@@ -229,14 +229,10 @@ export default {
     let that = this;
     document.addEventListener("keydown", (e) => {
       if (e.key == "Delete") {
-        try {
-          this.currentCell.remove();
-        } catch (e) {
-          if (that.currentCell && that.currentCell.id) {
-            that.currentCell.remove();
-          } else {
-            that.currentCell.cell.remove();
-          }
+        if (that.currentCell && that.currentCell.id) {
+          that.currentCell.remove();
+        } else {
+          that.currentCell.cell.remove();
         }
         return;
       }
