@@ -1,3 +1,33 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@w569638598 
+w569638598
+/
+obstacle-wl
+Public
+Code
+Issues
+1
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+obstacle-wl/packages/x6/index.vue
+@AwesomeWangLi
+AwesomeWangLi test
+Latest commit 2d60221 1 hour ago
+ History
+ 1 contributor
+347 lines (334 sloc)  10 KB
+   
 <template>
   <div class="hello">
     <!-- 工具栏 -->
@@ -65,7 +95,6 @@ export default {
         this.currentCell.attr("line", { stroke: "#7c68fc", strokeWidth: 2 });
         this.currentCell.removeTools();
       }
-
       let removeBtnCfg;
       if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "red", strokeWidth: 3 });
@@ -77,12 +106,10 @@ export default {
       });
       this.currentCell = cell;
     });
-
     // if (localStorage.getItem("cell")) {
     //   let cells = JSON.parse(localStorage.getItem("cell")).cells;
     //   this.renderData(cells);
     // }
-
     this.graph.on("cell:unselected", ({ cell, node, e }) => {
       if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "#7c68fc", strokeWidth: 2 });
@@ -92,7 +119,6 @@ export default {
       }
       cell.removeTools();
       changePortsVisible(cell, false);
-
       Event.stopPropagation;
       Event.preventDefault;
       const html = cell.html instanceof Function ? cell.html() : cell.html;
@@ -113,7 +139,6 @@ export default {
       const tooltipDom = document.getElementById("tooltip-container");
       if (tooltipDom) tooltipDom.style.display = "none";
     });
-
     this.graph.on("blank:click", () => {
       if (!this.currentCell) return;
       const cell = this.currentCell.id
@@ -138,7 +163,6 @@ export default {
         return html;
       });
     });
-
     this.graph.on("edge:connected", (args) => {
       const edge = args.edge;
       const node = args.currentCell;
@@ -174,9 +198,7 @@ export default {
       //     ? this.currentCell
       //     : this.currentCell.cell;
       //   if (curCell.id == cell.id) return;
-
       //   curCell.removeTools();
-
       //   const html =
       //     curCell.html instanceof Function ? curCell.html() : curCell.html;
       //   curCell.setProp("html", () => {
@@ -219,7 +241,6 @@ export default {
       this.currentCell = cell;
       document.getElementById("currentTextNode").focus();
     });
-
     this.graph.on("node:mouseenter", ({ node }) => {
       Event.stopPropagation;
       const data = node.getData();
@@ -227,7 +248,6 @@ export default {
         changePortsVisible(node, false);
       } else changePortsVisible(node, true);
     });
-
     this.graph.on("node:mouseleave", ({ node }) => {
       Event.stopPropagation;
       const tooltipDom = document.getElementById("tooltip-container");
@@ -236,10 +256,17 @@ export default {
     });
     this.history = this.graph.history;
     let copyState = false;
+    let that = this;
     document.addEventListener("keydown", (e) => {
       if (e.key == "Delete") {
-        if (this.graph.findView(this.currentCell)) {
+        try {
           this.currentCell.remove();
+        } catch (e) {
+          if (that.currentCell && that.currentCell.id) {
+            that.currentCell.remove();
+          } else {
+            that.currentCell.cell.remove();
+          }
         }
         return;
       }
@@ -248,7 +275,6 @@ export default {
         return;
       }
       if (window.event.ctrlKey && window.event.shiftKey && e.key === "Z") {
-        console.log(this.graph.history, this.currentCell);
         this.history.redo();
         return;
       }
@@ -311,10 +337,8 @@ export default {
     getGraph() {
       return this.graph;
     },
-    matchNode() {},
   },
 };
-
 const changePortsVisible = (node, visible) => {
   const ports = document.querySelectorAll(
     `g[data-cell-id="${node.id}"] .x6-port-body`
@@ -345,3 +369,16 @@ const changePortsVisible = (node, visible) => {
   min-height: 10px;
 }
 </style>
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
