@@ -307,7 +307,6 @@ export default {
     exportData(cb) {
       if (cb instanceof Function) cb(this.graph.toJSON(), this.graph);
       return this.graph.toJSON();
-      // localStorage.setItem("cell", JSON.stringify(this.graph.toJSON()));
     },
     getGraph() {
       return this.graph;
