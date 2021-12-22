@@ -159,7 +159,7 @@ export default {
         },
       });
     });
-    this.graph.on("node:click", (cell) => {
+    this.graph.on("node:click", ({cell}) => {
       this.currentCell = cell;
     });
     this.graph.on("node:dblclick", ({ cell, e }) => {
@@ -229,11 +229,12 @@ export default {
     let that = this;
     document.addEventListener("keydown", (e) => {
       if (e.key == "Delete") {
-        if (that.currentCell && that.currentCell.id) {
-          that.currentCell.remove();
-        } else {
-          that.currentCell.cell.remove();
-        }
+        var selectedNodeArr = this.graph.getSelectedCells()
+        selectedNodeArr.forEach(e => {
+          e.remove();
+        })
+        // console.log(a)
+          // that.currentCell.remove();
         return;
       }
       if (window.event.ctrlKey && e.key === "z") {

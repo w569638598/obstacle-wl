@@ -65,7 +65,6 @@ export default {
         height,
         defaultSpanStyle
       });
-
       const node = this.graph.createNode(json);
       if (!this.freeze) this.dnd.start(node, e);
     },
