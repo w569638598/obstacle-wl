@@ -233,8 +233,6 @@ export default {
         selectedNodeArr.forEach(e => {
           e.remove();
         })
-        // console.log(a)
-          // that.currentCell.remove();
         return;
       }
       if (window.event.ctrlKey && e.key === "z") {
@@ -264,7 +262,6 @@ export default {
             break;
           }
         }
-        console.log(this.currentCell)
         createCell.label = cell.textContent;
         createCell.tooltip = cell.textContent;
         createCell.x = this.currentCell.store.data.position.x + 10;
