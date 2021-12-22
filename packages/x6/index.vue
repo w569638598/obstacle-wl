@@ -76,10 +76,6 @@ export default {
       });
       this.currentCell = cell;
     });
-    // if (localStorage.getItem("cell")) {
-    //   let cells = JSON.parse(localStorage.getItem("cell")).cells;
-    //   this.renderData(cells);
-    // }
     this.graph.on("cell:unselected", ({ cell, node, e }) => {
       if (cell.isEdge && cell.isEdge()) {
         cell.attr("line", { stroke: "#7c68fc", strokeWidth: 2 });
@@ -163,27 +159,6 @@ export default {
       this.currentCell = cell;
     });
     this.graph.on("node:dblclick", ({ cell, e }) => {
-      // if (this.currentCell) {
-      //   const curCell = this.currentCell.id
-      //     ? this.currentCell
-      //     : this.currentCell.cell;
-      //   if (curCell.id == cell.id) return;
-      //   curCell.removeTools();
-      //   const html =
-      //     curCell.html instanceof Function ? curCell.html() : curCell.html;
-      //   curCell.setProp("html", () => {
-      //     const childrenTag = html.children[1];
-      //     if (childrenTag.nodeName !== "PRE") {
-      //       const input = html.querySelector("textarea");
-      //       html.querySelector("textarea").outerHTML = changeTag(
-      //         "pre",
-      //         input.value,
-      //         curCell
-      //       ).outerHTML;
-      //     }
-      //     return html;
-      //   });
-      // }
       Event.stopPropagation;
       const html = cell.html instanceof Function ? cell.html() : cell.html;
       cell.setProp("html", () => {
@@ -273,27 +248,6 @@ export default {
           let json = createImageNode(createCell);
           this.graph.addNode(json);
         }
-        // const cell = this.currentCell.store.data.data;
-
-        // let createCell;
-        // if (!cell.typeImgNo) return;
-        // for (let i = 0; i < nodes.length; i++) {
-        //   const item = nodes[i];
-        //   if (!item.typeImgNo) break;
-        //   if (cell.typeImgNo === item.typeImgNo) {
-        //     createCell = JSON.parse(JSON.stringify(item));
-        //     break;
-        //   }
-        // }
-        // createCell.label = cell.textContent;
-        // createCell.tooltip = cell.textContent;
-        // createCell.x = this.currentCell.store.data.position.x + 10;
-        // createCell.y = this.currentCell.store.data.position.y + 10;
-        // createCell.width = this.currentCell.store.data.size.width;
-        // createCell.height = this.currentCell.store.data.size.height;
-        // // console.log(createCell)
-        // let json = createImageNode(createCell);
-        // this.graph.addNode(json);
         return;
       }
     });
