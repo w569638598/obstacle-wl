@@ -159,7 +159,7 @@ export default {
         },
       });
     });
-    this.graph.on("node:click", ({cell}) => {
+    this.graph.on("node:click", ({ cell }) => {
       this.currentCell = cell;
     });
     this.graph.on("node:dblclick", ({ cell, e }) => {
@@ -229,15 +229,15 @@ export default {
     let that = this;
     document.addEventListener("keydown", (e) => {
       if (e.key == "Delete") {
-        var selectedNodeArr = this.graph.getSelectedCells()
-        selectedNodeArr.forEach(e => {
+        var selectedNodeArr = this.graph.getSelectedCells();
+        selectedNodeArr.forEach((e) => {
           e.remove();
-        })
+        });
         return;
       }
       if (window.event.ctrlKey && e.key === "z") {
         const textarea = document.querySelectorAll(".nodeBox textarea");
-        if(textarea.length)return
+        if (textarea.length) return;
         this.history.undo();
         return;
       }
@@ -250,24 +250,50 @@ export default {
         return;
       }
       if (window.event.ctrlKey && e.key === "v" && copyState) {
-        if (!this.currentCell) return;
-        const cell = this.currentCell.store.data.data;
-        let createCell;
-        if (!cell.typeImgNo) return;
-        for (let i = 0; i < nodes.length; i++) {
-          const item = nodes[i];
-          if (!item.typeImgNo) break;
-          if (cell.typeImgNo === item.typeImgNo) {
-            createCell = JSON.parse(JSON.stringify(item));
-            break;
+        // if (!this.currentCell) return;
+        const nodeArr = this.graph.getSelectedCells();
+        for (let i = 0; i < nodeArr.length; i++) {
+          const cell = nodeArr[i].store.data;
+          let createCell;
+          for (let i = 0; i < nodes.length; i++) {
+            const item = nodes[i];
+            if (!item.typeImgNo) break;
+            if (cell.data.typeImgNo === item.typeImgNo) {
+              createCell = JSON.parse(JSON.stringify(item));
+              break;
+            }
           }
+          createCell.label = cell.data.textContent;
+          createCell.tooltip = cell.data.textContent;
+          createCell.x = cell.position.x + 10;
+          createCell.y = cell.position.y + 10;
+          createCell.width = cell.size.width;
+          createCell.height = cell.size.height;
+          // console.log(createCell)
+          let json = createImageNode(createCell);
+          this.graph.addNode(json);
         }
-        createCell.label = cell.textContent;
-        createCell.tooltip = cell.textContent;
-        createCell.x = this.currentCell.store.data.position.x + 10;
-        createCell.y = this.currentCell.store.data.position.y + 10;
-        let json = createImageNode(createCell);
-        this.graph.addNode(json);
+        // const cell = this.currentCell.store.data.data;
+
+        // let createCell;
+        // if (!cell.typeImgNo) return;
+        // for (let i = 0; i < nodes.length; i++) {
+        //   const item = nodes[i];
+        //   if (!item.typeImgNo) break;
+        //   if (cell.typeImgNo === item.typeImgNo) {
+        //     createCell = JSON.parse(JSON.stringify(item));
+        //     break;
+        //   }
+        // }
+        // createCell.label = cell.textContent;
+        // createCell.tooltip = cell.textContent;
+        // createCell.x = this.currentCell.store.data.position.x + 10;
+        // createCell.y = this.currentCell.store.data.position.y + 10;
+        // createCell.width = this.currentCell.store.data.size.width;
+        // createCell.height = this.currentCell.store.data.size.height;
+        // // console.log(createCell)
+        // let json = createImageNode(createCell);
+        // this.graph.addNode(json);
         return;
       }
     });
