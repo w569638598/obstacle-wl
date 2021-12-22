@@ -238,6 +238,8 @@ export default {
         return;
       }
       if (window.event.ctrlKey && e.key === "z") {
+        const textarea = document.querySelectorAll(".nodeBox textarea");
+        if(textarea.length)return
         this.history.undo();
         return;
       }
