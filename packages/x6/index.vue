@@ -252,8 +252,8 @@ export default {
         return;
       }
       if (window.event.ctrlKey && e.key === "v" && copyState) {
-        if (!this.currentCell || !this.currentCell.node) return;
-        const cell = this.currentCell.node.store.data.data;
+        if (!this.currentCell) return;
+        const cell = this.currentCell.store.data.data;
         let createCell;
         if (!cell.typeImgNo) return;
         for (let i = 0; i < nodes.length; i++) {
@@ -264,10 +264,11 @@ export default {
             break;
           }
         }
+        console.log(this.currentCell)
         createCell.label = cell.textContent;
         createCell.tooltip = cell.textContent;
-        createCell.x = this.currentCell.x + 10;
-        createCell.y = this.currentCell.y + 10;
+        createCell.x = this.currentCell.store.data.position.x + 10;
+        createCell.y = this.currentCell.store.data.position.y + 10;
         let json = createImageNode(createCell);
         this.graph.addNode(json);
         return;
