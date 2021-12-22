@@ -53,6 +53,25 @@ getGraph(){
 renderData(data: cellJSONObject)
 ```
 ---- 
+
+
+###### 快捷键
+-----------------
+| 名称 | 方法 | 注释 |
+| :----| :----| ----|
+|复制|ctrl+c|点击节点后按ctrl+c|
+|粘贴|ctrl+v|复制后按ctrl+v|
+|框选|ctrl+按下鼠标左键拖动|
+|删除|delete|选中节点后按delete|
+|批量粘贴||框选后按ctrl+v|
+|批量删除||框选后按delete|
+
+
+###### 效果图预览
+[github](https://github.com/w569638598/obstacle-wl.git)
+![](preview.png)
+
+----------------
 `javascript`
 
 ![](call.jpg)
