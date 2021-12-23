@@ -7,6 +7,18 @@
     <!-- 画布 -->
     <div id="container" :style="{ height: canvasHeight }"></div>
     <!-- <button class="exportData" @click="exportData">导出</button> -->
+    <div class="help">
+    <span class="helpBtn iconhelp iconfont"></span>
+    <ul>
+      <li><span class="label">复制</span><span class="describe">ctrl+c</span></li>
+      <li><span class="label">粘贴</span><span class="describe">ctrl+v</span></li>
+      <li><span class="label">框选</span><span class="describe">ctrl+按下鼠标左键拖动</span></li>
+      <li><span class="label">删除</span><span class="describe">delete</span></li>
+      <li><span class="label">批量粘贴</span><span class="describe">多选后按ctrl+v</span></li>
+      <li><span class="label">批量删除</span><span class="describe">多选后按delete</span></li>
+      <li><span class="label">点选</span><span class="describe">ctrl+鼠标左键单击</span></li>
+    </ul>
+    </div>
   </div>
 </template>
 
@@ -298,6 +310,13 @@ const changePortsVisible = (node, visible) => {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+@import url('//at.alicdn.com/t/font_1471400_k4dlg7u3p1q.css');
+ul,li{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+}
 .exportData {
   position: fixed;
   top: 10%;
@@ -314,5 +333,45 @@ const changePortsVisible = (node, visible) => {
   flex: 1;
   height: 100% !important;
   min-height: 10px;
+}
+.help{
+  float: left;
+  position: fixed;
+  right: 6px;
+  font-size: 14px;
+  .iconhelp{
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    font-size: 22px;
+    display: block;
+    cursor: help;
+    &:hover + ul{
+      left: 0;
+      opacity: 1;
+    }
+  }
+  ul{
+    background: white;
+    padding: 10px 16px;
+    border:solid 1px #eee;
+    clear: both;
+    position: relative;
+    top: 10px;
+    transition: ease-in-out .3s left, ease-in-out .4s opacity .1s;
+    left: 100%;
+    opacity: 0;
+  }
+  li{
+    text-align: left;
+    margin: 15px 0;
+    line-height: 180%;
+    .label{
+      background: #efefef;
+      padding: 5px;
+      border: solid 1px #e0e0e0;
+      margin-right: 6px;
+    }
+  }
 }
 </style>
