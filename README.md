@@ -74,5 +74,3 @@ renderData(data: cellJSONObject)
 
 ----------------
 `javascript`
-
-![](call.jpg)
