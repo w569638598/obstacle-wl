@@ -66,5 +66,3 @@ renderData(data: cellJSONObject)
 ###### 效果图预览
 &#128640;[github](https://github.com/w569638598/obstacle-wl.git)
 ![](preview.png)
-
-----------------
